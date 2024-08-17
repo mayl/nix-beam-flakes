@@ -1,5 +1,5 @@
 _: {
-  imports = [./livebook.nix ./phx_new.nix];
+  imports = [./livebook.nix ./phx_new.nix ./igniter.nix];
 
   perSystem = {
     config,
