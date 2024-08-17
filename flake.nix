@@ -11,12 +11,12 @@
       imports = [./parts/all-parts.nix ./local-parts];
       systems = ["aarch64-darwin" "x86_64-darwin" "x86_64-linux"];
 
+      perSystem = {pkgs, ...}: {
+        formatter = pkgs.alejandra;
+      };
+
       flake = {
         flakeModule = ./parts/all-parts.nix;
-
-        perSystem = {pkgs, ...}: {
-          formatter = pkgs.alejandra;
-        };
 
         templates = {
           default = {
