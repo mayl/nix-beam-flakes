@@ -58,7 +58,16 @@
         name = pname;
         runtimeInputs = [erlang elixir git hex];
         text = ''
-          export MIX_HOME="${archive}"
+          TEMPDIR=$(mktemp -d)
+          cp -r "${archive}" "$TEMPDIR/mix"
+          chmod -R +rwx "$TEMPDIR"
+          mkdir "$TEMPDIR/hex"
+          mkdir "$TEMPDIR/mix/elixir"
+          echo "$TEMPDIR"
+          #export MIX_HOME="${archive}"
+          #export HEX_OFFLINE=1
+          export HEX_HOME="$TEMPDIR/hex"
+          export MIX_HOME="$TEMPDIR/mix"
 
           case $1 in
             help | "--help")
@@ -92,6 +101,12 @@
           rev = "v${version}";
           sha256 = "sha256-WFUfwny0qYg9xqkW/nUSbNTJ3IAp1a+jzwUi5iQCS8E=";
         };
+        hex_archive = pkgs.linkFarm "hex_archive" [ 
+          { 
+            name = "archives/hex-2.1.1/hex-2.1.1/ebin";
+            path = "${hex}/lib/erlang/lib/hex/ebin";
+          }
+        ];
       in
         wrapMixCommand {
           inherit elixir erlang hex pname subcommand;
@@ -104,10 +119,12 @@
                 src = "${phx_src}/installer";
               })
               (buildMixArchive {
-                inherit elixir hex rebar rebar3 version;
+                inherit elixir hex pname rebar rebar3 version;
                 src = "${src}/installer";
               })
+              hex_archive
             ];
+          };
           meta.mainProgram = "igniter_new";
         };
     };
