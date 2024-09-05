@@ -73,7 +73,7 @@
   in {
     packages = let
       inherit (beamPkgs) erlang rebar rebar3;
-      elixir = beamPkgs.elixir_1_15;
+      elixir = beamPkgs.elixir_1_17;
       hex = beamPkgs.hex.override {inherit elixir;};
       pname = "nerves";
       subcommand = "nerves.new";
