@@ -1,6 +1,6 @@
 {lib, ...}: {
   perSystem = {pkgs, ...}: let
-    beamPkgs = pkgs.beam.packages.erlangR26.extend (_final: prev: {
+    beamPkgs = pkgs.beam.packages.erlang_26.extend (_final: prev: {
       rebar3 = prev.rebar3.overrideAttrs (_old: {doCheck = false;});
     });
     buildMixArchive = {
@@ -58,24 +58,24 @@
         name = pname;
         runtimeInputs = [erlang elixir git hex];
         text = ''
-        # igniter needs a writeable HEX and MIX archive directory 
-          TEMPDIR=$(mktemp -d)
-          cp -r "${archive}" "$TEMPDIR/mix"
-          chmod -R +rwx "$TEMPDIR"
-          mkdir "$TEMPDIR/hex"
-          mkdir "$TEMPDIR/mix/elixir"
-          echo "$TEMPDIR"
-          export HEX_HOME="$TEMPDIR/hex"
-          export MIX_HOME="$TEMPDIR/mix"
+          # igniter needs a writeable HEX and MIX archive directory
+            TEMPDIR=$(mktemp -d)
+            cp -r "${archive}" "$TEMPDIR/mix"
+            chmod -R +rwx "$TEMPDIR"
+            mkdir "$TEMPDIR/hex"
+            mkdir "$TEMPDIR/mix/elixir"
+            echo "$TEMPDIR"
+            export HEX_HOME="$TEMPDIR/hex"
+            export MIX_HOME="$TEMPDIR/mix"
 
-          case $1 in
-            help | "--help")
-              exec mix help ${subcommand}
-              ;;
-            *)
-              exec mix ${subcommand} "$@"
-              ;;
-          esac
+            case $1 in
+              help | "--help")
+                exec mix help ${subcommand}
+                ;;
+              *)
+                exec mix ${subcommand} "$@"
+                ;;
+            esac
         '';
       };
   in {
